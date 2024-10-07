@@ -1,0 +1,579 @@
+{
+	"info": {
+		"_postman_id": "c383daef-8eee-4445-9ab4-475e139f9a01",
+		"name": "GraphQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37033874",
+		"_collection_link": "https://learningpostman-4204.postman.co/workspace/LearningPostMan-Workspace~f287bb11-d904-43a2-a246-0cce05ec11b2/collection/37033874-c383daef-8eee-4445-9ab4-475e139f9a01?action=share&source=collection_link&creator=37033874"
+	},
+	"item": [
+		{
+			"name": "CreateLocation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsData = pm.response.json()\r",
+							"pm.collectionVariables.set(\"locId\", jsData.data.createLocation.id)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($location:String!,$LocType:String!, $dimension:String!){\r\n createLocation(location: {name:$location, type:$LocType, \r\n  dimension:$dimension}){\r\n    id\r\n  }\r\n}",
+						"variables": "{\r\n  \"location\":\"Dublin\",\r\n  \"LocType\": \"Country\",\r\n  \"dimension\": \"5000\"\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateCharacter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsData = pm.response.json()\r",
+							"pm.collectionVariables.set(\"charId\", jsData.data.createCharacter.id)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation(\r\n$character:String!, $charType:String!, $status:String!, \r\n$species:String!, $gender:String!, $image:String!,\r\n$originId:Int!, $locationId:Int!)\r\n{\r\n  createCharacter(character: {name:$character, type:$charType, \r\n    status:$status, species:$species, gender:$gender, \r\n    image:$image, originId:$originId, locationId:$locationId})\r\n    {\r\n    id\r\n    }\r\n}",
+						"variables": "{\r\n  \"character\":\"Henry Cavill\",\r\n  \"charType\": \"Actor\",\r\n  \"status\": \"Alive\",\r\n  \"species\":\"Angel\",\r\n  \"gender\":\"Male\",\r\n  \"image\":\"png\",\r\n  \"originId\":{{locId}},\r\n  \"locationId\":{{locId}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateEpisode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsData = pm.response.json()\r",
+							"pm.collectionVariables.set(\"epId\", jsData.data.createEpisode.id)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($epName:String!, $airDate:String!, $episode:String!){\r\n \r\n  createEpisode(episode: {name:$epName, air_date:$airDate, \r\n    episode:$episode}){\r\n    id\r\n  }\r\n}",
+						"variables": "{\r\n    \"epName\":\"Pilot\",\r\n    \"airDate\":\"2024-06-17\",\r\n    \"episode\":\"1\"\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AssociateCharToEpi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($episodeId:Int!, $characterId:Int!){\r\n    associateEpisodeCharacter(episodeId: $episodeId, characterId:$characterId){\r\n    status\r\n  }\t \r\n}",
+						"variables": "{\r\n    \"episodeId\": {{epId}}, \r\n    \"characterId\":{{charId}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsData = pm.response.json();\r",
+							"\r",
+							"// Add a test to check for response time\r",
+							"pm.test(\"Response time is less than 300ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields for character - name, status, and species\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Check for character properties\r",
+							"    pm.expect(responseData.data.character).to.exist;\r",
+							"    pm.expect(responseData.data.character.name).to.exist;\r",
+							"    pm.expect(responseData.data.character.status).to.exist;\r",
+							"    pm.expect(responseData.data.character.species).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Location ID and residents are present with non-zero values\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"\r",
+							"    // Check location ID and residents in the location object\r",
+							"    pm.expect(responseData.data.location.id).to.exist.and.to.be.above(0, \"Location ID should be a non-zero value\");\r",
+							"    responseData.data.location.residents.forEach(function(resident) {\r",
+							"        pm.expect(resident.id).to.exist.and.to.be.above(0, \"Resident ID should be a non-zero value\");\r",
+							"    });\r",
+							"\r",
+							"    // Check location ID and residents in the locations result array\r",
+							"    responseData.data.locations.result.forEach(function(location) {\r",
+							"        pm.expect(location.id).to.exist.and.to.be.above(0, \"Location ID should be a non-zero value\");\r",
+							"        location.residents.forEach(function(resident) {\r",
+							"            pm.expect(resident.id).to.exist.and.to.be.above(0, \"Resident ID should be a non-zero value\");\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Episode has a valid name and air date\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    // Check for valid episode name and air date\r",
+							"    pm.expect(responseData.data).to.have.property('episode').that.is.an('object');\r",
+							"    pm.expect(responseData.data.episode).to.have.property('name').that.is.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"    pm.expect(responseData.data.episode).to.have.property('air_date').that.is.a('string').and.to.have.lengthOf.at.least(1, \"Air date should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate locations info count is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    // Check for non-negative integer count\r",
+							"    pm.expect(responseData.data.locations.info.count).to.be.a('number');\r",
+							"    pm.expect(responseData.data.locations.info.count).to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Schema validation for character - name, status, and species\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Schema validation for character properties\r",
+							"    pm.expect(responseData.data).to.have.property('character');\r",
+							"    pm.expect(responseData.data.character).to.have.property('name').that.is.a('string');\r",
+							"    pm.expect(responseData.data.character).to.have.property('status').that.is.a('string');\r",
+							"    pm.expect(responseData.data.character).to.have.property('species').that.is.a('string');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Schema validation for location - name, type, id, and residents\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Schema validation for location properties\r",
+							"    pm.expect(responseData.data).to.have.property('location');\r",
+							"    pm.expect(responseData.data.location.name).to.be.a('string');\r",
+							"\r",
+							"    pm.expect(responseData.data.location).to.have.property('type');\r",
+							"    pm.expect(responseData.data.location.type).to.be.a('string');\r",
+							"\r",
+							"    pm.expect(responseData.data.location).to.have.property('id');\r",
+							"    pm.expect(responseData.data.location.id).to.be.a('number');\r",
+							"\r",
+							"    pm.expect(responseData.data.location).to.have.property('residents');\r",
+							"    pm.expect(responseData.data.location.residents).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Schema validation for episode - name and air date\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  // Schema validation for episode properties\r",
+							"  pm.expect(responseData.data).to.have.property('episode');\r",
+							"  pm.expect(responseData.data.episode).to.have.property('name').that.is.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"  pm.expect(responseData.data.episode).to.have.property('air_date').that.is.a('string').and.to.have.lengthOf.at.least(1, \"Air date should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Schema validation for locations - info count and result array\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    // Schema validation for locations properties\r",
+							"    pm.expect(responseData.data.locations).to.exist.and.to.be.an('object');\r",
+							"\r",
+							"    pm.expect(responseData.data.locations.info).to.exist.and.to.be.an('object');\r",
+							"    pm.expect(responseData.data.locations.info.count).to.exist.and.to.be.a('number');\r",
+							"\r",
+							"    pm.expect(responseData.data.locations.result).to.exist.and.to.be.an('array');\r",
+							"    responseData.data.locations.result.forEach(function(result) {\r",
+							"        pm.expect(result).to.be.an('object');\r",
+							"        pm.expect(result.name).to.exist.and.to.be.a('string');\r",
+							"        pm.expect(result.type).to.exist.and.to.be.a('string');\r",
+							"        pm.expect(result.id).to.exist.and.to.be.a('number');\r",
+							"        \r",
+							"        pm.expect(result.residents).to.exist.and.to.be.an('array');\r",
+							"        result.residents.forEach(function(resident) {\r",
+							"            pm.expect(resident).to.be.an('object');\r",
+							"            pm.expect(resident.id).to.exist.and.to.be.a('number');\r",
+							"            pm.expect(resident.name).to.exist.and.to.be.a('string');\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Consistency between character name and residents' names\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    // Check for consistency between character name and residents' names\r",
+							"    pm.expect(responseData.data.character.name).to.be.a('string').and.to.not.be.empty;\r",
+							"    \r",
+							"    responseData.data.location.residents.forEach(resident => {\r",
+							"        pm.expect(resident.name).to.equal(responseData.data.character.name);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify location ID in 'locations' matches the ID in 'location'\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Verify location ID consistency\r",
+							"    pm.expect(responseData.data.location.id).to.equal(responseData.data.location.id);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ensure that the episode name is not the same as any of the residents' names\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    // Check for uniqueness of episode name among residents' names\r",
+							"    pm.expect(responseData.data.episode.name).to.not.equal(responseData.data.locations.result.forEach(location => {\r",
+							"        location.residents.forEach(resident => {\r",
+							"            return resident.name;\r",
+							"        });\r",
+							"    }), \"Episode name should not be the same as any resident's name\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the uniqueness of resident IDs across all locations\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    const allResidents = [];\r",
+							"\r",
+							"    responseData.data.locations.result.forEach(location => {\r",
+							"        location.residents.forEach(resident => {\r",
+							"            pm.expect(allResidents).to.not.include(resident.id, `Resident ID ${resident.id} should be unique`);\r",
+							"            allResidents.push(resident.id);\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify unique episode name among all residents' names\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Check for unique episode name among residents' names\r",
+							"    pm.expect(responseData.data.episode.name).to.exist.and.to.be.a('string');\r",
+							"    \r",
+							"    responseData.data.locations.result.forEach(location => {\r",
+							"        location.residents.forEach(resident => {\r",
+							"            pm.expect(resident.name).to.not.equal(responseData.data.episode.name, \"Episode name should be unique among all residents' names\");\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate that the location IDs are unique across all locations and locations result array\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Check for unique location IDs\r",
+							"    pm.expect(responseData.data.locations).to.be.an('object');\r",
+							"    pm.expect(responseData.data.locations.result).to.be.an('array');\r",
+							"\r",
+							"    const allLocationIds = new Set();\r",
+							"    let isUnique = true;\r",
+							"\r",
+							"    responseData.data.locations.result.forEach(location => {\r",
+							"        if (allLocationIds.has(location.id)) {\r",
+							"            isUnique = false;\r",
+							"        } else {\r",
+							"            allLocationIds.add(location.id);\r",
+							"        }\r",
+							"\r",
+							"        location.residents.forEach(resident => {\r",
+							"            if (allLocationIds.has(resident.id)) {\r",
+							"                isUnique = false;\r",
+							"            } else {\r",
+							"                allLocationIds.add(resident.id);\r",
+							"            }\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"    pm.expect(isUnique).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// Add a test to check for data completeness\r",
+							"pm.test(\"Data completeness test\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    // Check for data completeness\r",
+							"    pm.expect(responseData.data.character.name).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.character.status).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.character.species).to.not.be.empty;\r",
+							"\r",
+							"    pm.expect(responseData.data.location.name).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.location.type).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.location.id).to.be.above(0);\r",
+							"\r",
+							"    pm.expect(responseData.data.episode.name).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.episode.air_date).to.not.be.empty;\r",
+							"\r",
+							"    pm.expect(responseData.data.locations.info.count).to.be.at.least(0);\r",
+							"\r",
+							"    responseData.data.locations.result.forEach(function(result) {\r",
+							"        pm.expect(result.name).to.not.be.empty;\r",
+							"        pm.expect(result.type).to.not.be.empty;\r",
+							"        pm.expect(result.id).to.be.above(0);\r",
+							"\r",
+							"        result.residents.forEach(function(resident) {\r",
+							"            pm.expect(resident.id).to.be.above(0);\r",
+							"            pm.expect(resident.name).to.not.be.empty;\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query($characterId: Int!, $locationId: Int!, $episodeId: Int!, $country: String!, $region: String!){\r\n  character(characterId: $characterId){\r\n    name\r\n    status\r\n    species\r\n  }\r\n  location(locationId: $locationId){\r\n    name\r\n    type\r\n    id\r\n    residents{\r\n      id\r\n      name\r\n    }\r\n  }\r\n  episode(episodeId: $episodeId){\r\n    name\r\n    air_date\r\n  }\r\n  locations(filters: {name: $country, type: $region}){\r\n    info{\r\n      count\r\n    }\r\n    result{\r\n      name\r\n      type\r\n      id\r\n      residents{\r\n        id\r\n        name\r\n      }\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"characterId\": {{charId}},\r\n  \"locationId\": {{locId}},\r\n  \"episodeId\": {{epId}},\r\n  \"country\": \"India\",\r\n  \"region\": \"Eastern\"\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteLocation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate the value of locationsDeleted\", function () {\r",
+							"     var responseData = pm.response.json();\r",
+							"     pm.expect(responseData.data.deleteLocations.locationsDeleted).to.be.eql(1)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($locId:[Int!]){\r\n   deleteLocations(locationIds:$locId){\r\n    locationsDeleted\r\n  }\r\n}",
+						"variables": "{\r\n    \"locId\":{{locId}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteCharacter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate the value of charactersDeleted\", function () {\r",
+							"     var responseData = pm.response.json();\r",
+							"     pm.expect(responseData.data.deleteCharacters.charactersDeleted).to.be.eql(0)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($charId:[Int!]){\r\n  deleteCharacters(characterIds:$charId){\r\n    charactersDeleted\r\n  }\r\n}",
+						"variables": "{\r\n    \"charId\":{{charId}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteEpisode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate the value of episodesDeleted\", function () {\r",
+							"     var responseData = pm.response.json();\r",
+							"     pm.expect(responseData.data.deleteEpisodes.episodesDeleted).to.be.eql(1)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($epId:[Int!]){\r\n  deleteEpisodes(episodeIds:$epId){\r\n    episodesDeleted\r\n  }\r\n}",
+						"variables": "{\r\n    \"epId\":{{epId}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graghQLURL}}",
+					"host": [
+						"{{graghQLURL}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "locId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "charId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "epId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "graghQLURL",
+			"value": "https://rahulshettyacademy.com/gq/graphql",
+			"type": "string"
+		}
+	]
+}

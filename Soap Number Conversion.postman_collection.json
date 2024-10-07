@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "8e6a0ce7-f1fc-485c-8d73-d315c70cedfa",
+		"name": "Soap Number Conversion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37033874",
+		"_collection_link": "https://learningpostman-4204.postman.co/workspace/LearningPostMan-Workspace~f287bb11-d904-43a2-a246-0cce05ec11b2/collection/37033874-8e6a0ce7-f1fc-485c-8d73-d315c70cedfa?action=share&source=collection_link&creator=37033874"
+	},
+	"item": [
+		{
+			"name": "NumberToWords",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validation of result\", function () {\r",
+							"    var responseXML = xml2Json(pm.response.text());\r",
+							"    pm.expect(responseXML).to.be.an('object');\r",
+							"    pm.expect(responseXML['soap:Envelope']).to.exist.and.to.be.an('object');\r",
+							"    pm.expect(responseXML['soap:Envelope']['soap:Body']).to.exist.and.to.be.an('object');\r",
+							"    pm.expect(responseXML['soap:Envelope']['soap:Body']['m:NumberToWordsResponse']).to.exist.and.to.be.an('object');\r",
+							"    pm.expect(responseXML['soap:Envelope']['soap:Body']['m:NumberToWordsResponse']['m:NumberToWordsResult']).to.exist;\r",
+							"    pm.expect(responseXML[\"soap:Envelope\"][\"soap:Body\"][\"m:NumberToWordsResponse\"][\"m:NumberToWordsResult\"]).to.be.eql(pm.collectionVariables.get(\"output\"))\r",
+							"    pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"output\"))\r",
+							"});\r",
+							"pm.test(\"Response time is within acceptable range\", function () {\r",
+							"    pm.response.to.have.status(\"OK\")\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\r\n  <soap12:Body>\r\n    <NumberToWords xmlns=\"http://www.dataaccess.com/webservicesserver/\">\r\n      <ubiNum>{{input}}</ubiNum>\r\n    </NumberToWords>\r\n  </soap12:Body>\r\n</soap12:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL",
+					"protocol": "https",
+					"host": [
+						"www",
+						"dataaccess",
+						"com"
+					],
+					"path": [
+						"webservicesserver",
+						"numberconversion.wso"
+					],
+					"query": [
+						{
+							"key": "WSDL",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NumberToDollarsWords",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsData = xml2Json(pm.response.text());\r",
+							"console.log(jsData);\r",
+							"pm.test(\"Validation of the output\", function () {\r",
+							"    pm.expect(jsData).to.be.an('object');\r",
+							"    pm.expect(jsData).to.have.property('soap:Envelope');\r",
+							"    pm.expect(jsData['soap:Envelope']).to.have.property('soap:Body');\r",
+							"    pm.expect(jsData['soap:Envelope']['soap:Body']).to.have.property('m:NumberToDollarsResponse');\r",
+							"    pm.expect(jsData['soap:Envelope']['soap:Body']['m:NumberToDollarsResponse']).to.have.property('m:NumberToDollarsResult');\r",
+							"    pm.expect(jsData['soap:Envelope']['soap:Body']['m:NumberToDollarsResponse']['m:NumberToDollarsResult']).to.be.eql(pm.collectionVariables.get(\"output2\"));\r",
+							"    pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"output2\"));\r",
+							"    pm.response.to.have.status(200); // Changed \"OK\" to 200\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\r\n  <soap12:Body>\r\n    <NumberToDollars xmlns=\"http://www.dataaccess.com/webservicesserver/\">\r\n      <dNum>{{input1}}</dNum>\r\n    </NumberToDollars>\r\n  </soap12:Body>\r\n</soap12:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL",
+					"protocol": "https",
+					"host": [
+						"www",
+						"dataaccess",
+						"com"
+					],
+					"path": [
+						"webservicesserver",
+						"numberconversion.wso"
+					],
+					"query": [
+						{
+							"key": "WSDL",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "input",
+			"value": "5000",
+			"type": "string"
+		},
+		{
+			"key": "output",
+			"value": "five thousand",
+			"type": "string"
+		},
+		{
+			"key": "input1",
+			"value": "4.5",
+			"type": "string"
+		},
+		{
+			"key": "output2",
+			"value": "four dollars and fifty cents",
+			"type": "string"
+		}
+	]
+}
